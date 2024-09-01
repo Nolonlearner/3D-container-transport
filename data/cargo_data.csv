@@ -1,0 +1,6 @@
+ID,Name,Weight(kg),Volume(m^3),Category,MaxStackableLayers
+1,TV,20,0.1,Electronics,5
+2,Refrigerator,80,1.0,Electronics,1
+3,Sofa,50,1.5,Furniture,2
+4,Bicycle,15,0.3,Sports,4
+5,Books,10,0.05,Stationery,10
