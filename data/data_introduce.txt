@@ -1,0 +1,5 @@
+data/cargo_details.csv : 这个文件存放货物的详细信息。可以模拟一些货物的数据，字段包括货物ID、重量、体积等。
+
+data/container_dimensions.csv : 这个文件存放集装箱的尺寸数据，字段可以包括集装箱ID、长度、宽度、高度等。
+
+data/ship_cabin_layout.csv : 这个文件存放船舱的布局信息，字段包括船舱ID、可用空间的长宽高等。

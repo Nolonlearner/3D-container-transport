@@ -1,4 +1,0 @@
-ID,Shape,Volume(m^3),MaxWeight(kg),AllowedCategories
-1,Rectangular,200,500,Furniture,Electronics
-2,Cubic,100,200,Sports,Stationery
-3,Cylindrical,150,300,Electronics,Furniture,Sports

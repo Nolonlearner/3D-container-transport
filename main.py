@@ -1,7 +1,31 @@
+# main.py
 from algorithms.optimization import simulated_annealing, cost_function
+from algorithms.visualization import visualize_loading
+import numpy as np
 
-init_solution = [1, 2, 3, 4, 5]
-best_solution, best_cost = simulated_annealing(init_solution, cost_function, temp=100, cooling_rate=0.99, iterations=1000)
+def main():
+    init_solution = np.random.randint(1, 10, size=5)  # 随机生成初始解
 
-print(f"Best solution: {best_solution}")
-print(f"Best cost: {best_cost}")
+    # 使用模拟退火算法进行优化
+    best_solution, best_cost = simulated_annealing(init_solution, temp=100, cooling_rate=0.99,
+                                                   iterations=1000)
+
+    print(f"Best solution: {best_solution}")
+    print(f"Best cost: {best_cost}")
+
+    # 假设货物位置的计算结果
+    cargo_positions = [
+        (1, 0, 0, 0, 2, 2, 2),  # 货物 ID, x, y, z, 长, 宽, 高
+        (2, 2, 0, 0, 1, 1, 3),
+        (3, 0, 2, 0, 1, 3, 1),
+        (4, 1, 1, 1, 2, 1, 2),
+        (5, 2, 2, 2, 2, 2, 2)
+    ]
+
+    container_dimensions = (5, 5, 5)  # 集装箱尺寸
+
+    # 调用可视化函数
+    visualize_loading(cargo_positions, container_dimensions)
+
+if __name__ == "__main__":
+    main()

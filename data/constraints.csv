@@ -1,6 +1,0 @@
-Constraint,Value
-MaxWeightPerCabin(kg),300
-MinStackingHeight(m),0.5
-MaxStackingHeight(m),2.0
-MinBalanceRatio,0.8
-MaxBalanceRatio,1.2
