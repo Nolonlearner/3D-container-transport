@@ -5,7 +5,7 @@ import numpy as np
 def cost_function(solution):
     """
     计算装载方案的成本。
-    假设：每个值代表货物重量。我们引入一个目标值来优化货物的重量分布，或者避免过度装载。
+    假设：每个值代表货物重量。我们引入一个目标值来优化货物的重量分布，或避免过度装载。
 
     参数：
     solution: 方案（NumPy数组）
@@ -14,16 +14,20 @@ def cost_function(solution):
     总成本值
     """
     max_capacity = 500  # 集装箱的最大承载能力
-    ideal_weight = 250  # 假设最优重量分布为250
+    ideal_weight = 300  # 假设理想重量分布为300
     weight = np.sum(solution)  # 计算方案的总重量
 
-    # 计算与理想重量的差距
+    # 与理想重量的差距
     cost = np.abs(weight - ideal_weight)
 
-    # 如果超过最大容量，增加惩罚
+    # 惩罚过度装载
     if weight > max_capacity:
         penalty = (weight - max_capacity) ** 2
         cost += penalty
+
+    # 新增一个条件：鼓励解的均匀分布
+    variance = np.var(solution)
+    cost += variance * 0.1  # 适当增加方差的权重，避免解收敛到太简单的形式
 
     return cost
 
