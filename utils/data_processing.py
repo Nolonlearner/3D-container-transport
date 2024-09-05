@@ -11,9 +11,9 @@ def load_data(file_path):
     file_path: 数据文件的路径
 
     返回：
-    data: 加载的实验数据（Pandas DataFrame）
+    data: 加载的实验数据（DataFrame格式）
     """
-    data = pd.read_csv(file_path)
+    data = pd.read_csv(file_path)  # 使用 pandas 加载 CSV 文件
     return data
 
 def preprocess_data(data):

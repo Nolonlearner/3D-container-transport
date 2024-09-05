@@ -16,7 +16,7 @@ def cost_function(solution, cargo_data):
     ideal_weight = 300
 
     # 按照货物优先级计算总重量
-    weight = np.sum(cargo_data['Weight'][solution])
+    weight = np.sum(cargo_data['Weight'].values[solution])  # 修改这里
 
     # 与理想重量的差距
     cost = np.abs(weight - ideal_weight)
@@ -27,11 +27,10 @@ def cost_function(solution, cargo_data):
         cost += penalty
 
     # 优先级惩罚项：根据货物优先级增加成本
-    priority_cost = np.sum(cargo_data['Priority'][solution])
+    priority_cost = np.sum(cargo_data['Priority'].values[solution])
     cost += priority_cost * 0.01  # 调整权重以控制影响程度
 
     return cost
-
 
 def simulated_annealing(init_solution, cargo_data, temp=1000, cooling_rate=0.9, iterations=10000):
     """
@@ -57,8 +56,8 @@ def simulated_annealing(init_solution, cargo_data, temp=1000, cooling_rate=0.9, 
         # 生成新的候选解，通过在原解的基础上添加随机扰动
         new_solution = current_solution + np.random.randint(-5, 6, size=len(current_solution))
 
-        # 限制解的范围，例如让每个值在1到 len(cargo_data) - 1之间
-        new_solution = np.clip(new_solution, 1, len(cargo_data) - 1)
+        # 限制解的范围，例如让每个值在0到len(cargo_data)-1之间
+        new_solution = np.clip(new_solution, 0, len(cargo_data) - 1)  # 修改这里
 
         new_cost = cost_function(new_solution, cargo_data)  # 计算新解的成本
 
