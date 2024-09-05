@@ -2,9 +2,9 @@
 from algorithms.optimization import simulated_annealing
 from algorithms.visualization import visualize_loading
 from utils.data_processing import load_data
+from algorithms.calculatePosition import calculate_positions
 import numpy as np
 
-# main.py
 def main():
     # 加载货物数据
     cargo_data = load_data('data/cargo_details.csv')
@@ -22,17 +22,9 @@ def main():
     print(f"Best solution: {best_solution}")
     print(f"Best cost: {best_cost}")
 
-    # 假设货物位置的计算结果
-    cargo_positions = [
-        (1, 0, 0, 0, 2, 2, 2),
-        (2, 2, 0, 0, 1, 1, 3),
-        (3, 0, 2, 0, 1, 3, 1),
-        (4, 1, 1, 1, 2, 1, 2),
-        (5, 2, 2, 2, 2, 2, 2)
-    ]
-
-    container_dimensions = (5, 5, 5)  # 集装箱尺寸
-
+    container_dimensions = (10, 5, 5)  # 集装箱尺寸
+    # 计算货物位置
+    cargo_positions = calculate_positions(best_solution, cargo_data, container_dimensions)
     # 调用可视化函数
     visualize_loading(cargo_positions, container_dimensions)
 

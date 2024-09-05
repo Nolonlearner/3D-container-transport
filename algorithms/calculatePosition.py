@@ -1,47 +1,64 @@
-# algorithms/calculatePosition.py
+# algorithms/calculatePositions.py
+
 def calculate_positions(best_solution, cargo_data, container_dimensions):
-    """
-    根据最优解决方案计算货物在集装箱中的位置。
-
-    参数：
-    best_solution: 最优解的货物索引列表
-    cargo_data: 货物信息（DataFrame，包括重量、体积）
-    container_dimensions: 集装箱尺寸（长、宽、高）
-
-    返回：
-    cargo_positions: 货物的位置列表，每个元素为 (CargoID, x, y, z, 长, 宽, 高)
-    """
     cargo_positions = []
     container_length, container_width, container_height = container_dimensions
-    current_height = 0  # 当前高度，用于叠放货物
-    row_items = []  # 用于存储当前行的货物
-    row_width = 0  # 当前行的宽度
+    current_height = 0  # 当前高度
+    row_width = 0  # 当前行宽度
+    layer_height = 0  # 当前层高度
+    used_volume = 0  # 已使用的集装箱体积
 
-    for idx in best_solution:
-        cargo = cargo_data.iloc[idx]  # 获取当前货物的信息
+    print(f"集装箱尺寸: 长={container_length}, 宽={container_width}, 高={container_height}")
+
+    sorted_solution = sorted(best_solution, key=lambda idx: cargo_data.iloc[idx]['Priority'], reverse=True)
+
+    for idx in sorted_solution:
+        cargo = cargo_data.iloc[idx]
         cargo_id = cargo['CargoID']
-        weight = cargo['Weight']
-        volume = cargo['Volume']
+        length = cargo['Length']
+        width = cargo['Width']
+        height = cargo['Height']
 
-        # 假设每个货物的尺寸为 1x1x(体积)
-        cargo_length = 1
-        cargo_width = 1
-        cargo_height = volume  # 体积直接作为高度
+        print(f"\n尝试放置货物: ID={cargo_id}, 长={length}, 宽={width}, 高={height}")
+        print(f"当前集装箱剩余空间: 高={container_height - current_height}, 宽={container_width - row_width}")
 
-        # 检查是否能放入当前行
-        if row_width + cargo_width <= container_width:
-            # 添加货物到当前行
-            cargo_positions.append((cargo_id, row_width, current_height, 0, cargo_length, cargo_width, cargo_height))
-            row_width += cargo_width  # 更新当前行宽度
+        # 尝试在当前行放置货物
+        if row_width + width <= container_width:
+            if current_height + height <= container_height:
+                cargo_positions.append((cargo_id, row_width, current_height, 0, length, width, height))
+                print(f"放置货物: ID={cargo_id}, 位置=({row_width}, {current_height}, 0)")
+                row_width += width  # 更新当前行宽度
+                layer_height = max(layer_height, height)  # 更新当前层高度
+                used_volume += length * width * height
+            else:
+                # 当前层放不下，尝试换层
+                current_height += layer_height
+                if current_height + height <= container_height:
+                    cargo_positions.append((cargo_id, 0, current_height, 0, length, width, height))
+                    print(f"放置货物: ID={cargo_id}, 位置=(0, {current_height}, 0)")
+                    row_width = width  # 更新当前行宽度
+                    layer_height = height  # 更新当前层高度
+                    used_volume += length * width * height
+                else:
+                    print(f"警告：无法放置货物: ID={cargo_id}，当前高度={current_height}, 最大高度={container_height}")
+                    continue  # 继续尝试放置下一个货物
         else:
-            # 如果当前行放不下，则换行
-            current_height += max(cargo_height for _, _, height, _, _, _, _ in cargo_positions if height == 0)  # 找到当前行最高的货物
-            row_width = cargo_width  # 新的一行宽度为当前货物的宽度
-            cargo_positions.append((cargo_id, 0, current_height, 0, cargo_length, cargo_width, cargo_height))
+            # 当前行放不下，换行
+            current_height += layer_height  # 更新高度
+            row_width = 0  # 重置行宽度
+            layer_height = 0  # 重置层高度
+            print(f"换行，当前高度更新为: {current_height}")
 
-        # 检查集装箱高度限制
-        if current_height + cargo_height > container_height:
-            print("警告：集装箱空间不足，无法装载所有货物。")
-            break
+            if current_height + height <= container_height:
+                cargo_positions.append((cargo_id, row_width, current_height, 0, length, width, height))
+                print(f"放置货物: ID={cargo_id}, 位置=(0, {current_height}, 0)")
+                row_width += width  # 更新当前行宽度
+                layer_height = height  # 更新当前层高度
+                used_volume += length * width * height
+            else:
+                print(f"警告：无法放置货物: ID={cargo_id}，当前高度={current_height}, 最大高度={container_height}")
+                continue  # 继续尝试放置下一个货物
 
+    print(f"\n已使用体积: {used_volume}")
+    print(f"总集装箱体积: {container_length * container_width * container_height}")
     return cargo_positions
