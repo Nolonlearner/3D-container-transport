@@ -1,7 +1,7 @@
 # utils/data_processing.py
 
 import numpy as np
-
+import pandas as pd
 
 def load_data(file_path):
     """
@@ -11,11 +11,10 @@ def load_data(file_path):
     file_path: 数据文件的路径
 
     返回：
-    data: 加载的实验数据（NumPy数组）
+    data: 加载的实验数据（Pandas DataFrame）
     """
-    data = np.loadtxt(file_path, delimiter=',')
+    data = pd.read_csv(file_path)
     return data
-
 
 def preprocess_data(data):
     """

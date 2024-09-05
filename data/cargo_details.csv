@@ -1,5 +1,6 @@
-CargoID,Weight,Volume
-C001,200,10
-C002,500,20
-C003,100,5
-C004,400,15
+CargoID,Weight,Volume,Priority
+C001,200,10,1
+C002,500,20,3
+C003,100,5,2
+C004,400,15,1
+
