@@ -22,7 +22,7 @@ def main():
     print(f"Best solution: {best_solution}")
     print(f"Best cost: {best_cost}")
 
-    container_dimensions = (10, 5, 5)  # 集装箱尺寸
+    container_dimensions = (5, 10, 10)  # 集装箱尺寸
     # 计算货物位置
     cargo_positions = calculate_positions(best_solution, cargo_data, container_dimensions)
     # 调用可视化函数
