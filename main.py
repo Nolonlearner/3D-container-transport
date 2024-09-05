@@ -4,18 +4,17 @@ from algorithms.visualization import visualize_loading
 import numpy as np
 
 def main():
-    init_solution = np.random.randint(1, 10, size=5)  # 随机生成初始解
+    init_solution = np.random.randint(1, 100, size=20)  # 随机生成更大规模的初始解
 
     # 使用模拟退火算法进行优化
-    best_solution, best_cost = simulated_annealing(init_solution, temp=100, cooling_rate=0.99,
-                                                   iterations=1000)
+    best_solution, best_cost = simulated_annealing(init_solution, temp=1000, cooling_rate=0.95, iterations=10000)
 
     print(f"Best solution: {best_solution}")
     print(f"Best cost: {best_cost}")
 
     # 假设货物位置的计算结果
     cargo_positions = [
-        (1, 0, 0, 0, 2, 2, 2),  # 货物 ID, x, y, z, 长, 宽, 高
+        (1, 0, 0, 0, 2, 2, 2),
         (2, 2, 0, 0, 1, 1, 3),
         (3, 0, 2, 0, 1, 3, 1),
         (4, 1, 1, 1, 2, 1, 2),

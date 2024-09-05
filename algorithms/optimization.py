@@ -1,9 +1,11 @@
 # algorithms/optimization.py
 import numpy as np
 
+
 def cost_function(solution):
     """
-    计算装载方案的成本，示例函数。
+    计算装载方案的成本。
+    假设：每个值代表货物重量。我们引入一个目标值来优化货物的重量分布，或者避免过度装载。
 
     参数：
     solution: 方案（NumPy数组）
@@ -11,9 +13,22 @@ def cost_function(solution):
     返回：
     总成本值
     """
-    return np.sum(solution ** 2)  # 示例成本函数
+    max_capacity = 500  # 集装箱的最大承载能力
+    ideal_weight = 250  # 假设最优重量分布为250
+    weight = np.sum(solution)  # 计算方案的总重量
 
-def simulated_annealing(init_solution, temp=100, cooling_rate=0.99, iterations=1000):
+    # 计算与理想重量的差距
+    cost = np.abs(weight - ideal_weight)
+
+    # 如果超过最大容量，增加惩罚
+    if weight > max_capacity:
+        penalty = (weight - max_capacity) ** 2
+        cost += penalty
+
+    return cost
+
+
+def simulated_annealing(init_solution, temp=1000, cooling_rate=0.9, iterations=10000):
     """
     模拟退火算法的实现。
 
@@ -28,31 +43,31 @@ def simulated_annealing(init_solution, temp=100, cooling_rate=0.99, iterations=1
     best_cost: 最小成本
     """
     current_solution = np.array(init_solution)
-    current_cost = cost_function(current_solution)  # 直接调用定义的 cost_function
+    current_cost = cost_function(current_solution)  # 计算初始解的成本
 
     best_solution = current_solution.copy()
     best_cost = current_cost
 
     for i in range(iterations):
-        # 生成邻域解
-        new_solution = current_solution + np.random.randint(-1, 2, size=len(current_solution))
+        # 生成新的候选解，通过在原解的基础上添加随机扰动
+        new_solution = current_solution + np.random.randint(-5, 6, size=len(current_solution))
 
-        # 添加一个边界条件，确保解的值在合理范围内，比如说从 1 到 10
-        new_solution = np.clip(new_solution, 1, 10)
+        # 限制解的范围，例如让每个值在1到100之间
+        new_solution = np.clip(new_solution, 1, 100)
 
-        new_cost = cost_function(new_solution)  # 直接调用定义的 cost_function
+        new_cost = cost_function(new_solution)  # 计算新解的成本
 
-        # 如果新解更优或满足接受概率，则更新当前解
+        # 判断是否接受新解
         if new_cost < current_cost or np.exp((current_cost - new_cost) / temp) > np.random.rand():
             current_solution = new_solution
             current_cost = new_cost
 
-            # 更新最优解
+            # 如果找到更好的解，更新最优解
             if current_cost < best_cost:
                 best_solution = current_solution
                 best_cost = current_cost
 
-        # 降温
+        # 降温，逐渐减小搜索范围
         temp *= cooling_rate
 
     return best_solution.tolist(), best_cost
